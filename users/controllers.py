@@ -10,18 +10,52 @@ router = APIRouter()
 
 @router.get("/roles", tags=["roles"], response_model=list[UserRole])
 async def list_roles(session: SessionDep):
+    """
+    Retrieve all user roles.
+
+    - **Description:** Returns a list of all available user roles.
+    - **Response Example:**
+        [
+            {"id": 1, "name": "admin", "description": "Administrator"},
+            {"id": 2, "name": "user", "description": "Regular user"}
+        ]
+    """
     repo = UserRoleRepository(session)
     return repo.get_all()
 
 
 @router.get("/users", tags=["users"], response_model=list[UserList])
 async def list_users(session: SessionDep):
+    """
+    Retrieve all users.
+
+    - **Description:** Returns a list of all users with basic information.
+    - **Response Example:**
+        [
+            {"id": 1, "username": "alice", "email": "alice@example.com"},
+            {"id": 2, "username": "bob", "email": "bob@example.com"}
+        ]
+    """
     repo = UserRepository(session)
     return repo.get_all()
 
 
 @router.get("/users/{id}", tags=["users"], response_model=User)
 async def retrieve_user(id: int, session: SessionDep):
+    """
+    Retrieve a user by ID.
+
+    - **Description:** Returns detailed information about a specific user.
+    - **Path Parameter:** `id` - The user's unique identifier.
+    - **Response Example:**
+        {
+            "id": 1,
+            "username": "alice",
+            "email": "alice@example.com",
+            "role": {"id": 1, "name": "admin", "description": "Administrator"}
+        }
+    - **404:** User not found.
+    """
     repo = UserRepository(session)
     instance = repo.get(id)
     if not instance:
@@ -31,6 +65,14 @@ async def retrieve_user(id: int, session: SessionDep):
 
 @router.delete("/users/{id}", tags=["users"])
 async def delete_user(id: int, session: SessionDep):
+    """
+    Delete a user by ID.
+
+    - **Description:** Removes a user from the system.
+    - **Path Parameter:** `id` - The user's unique identifier.
+    - **Response:** `true` if deleted.
+    - **404:** User not found.
+    """
     try:
         repo = UserRepository(session)
         return repo.delete(id)
@@ -38,14 +80,54 @@ async def delete_user(id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="User not found")
 
 
-@router.post("/movie", tags=["users"])
+@router.post("/users", tags=["users"])
 async def add_user(user: User, session: SessionDep):
+    """
+    Create a new user.
+
+    - **Description:** Adds a new user to the system.
+    - **Request Example:**
+        {
+            "username": "charlie",
+            "email": "charlie@example.com",
+            "role_id": 2
+        }
+    - **Response:** The created user object.
+    - **Response Example:**
+        {
+            "id": 3,
+            "username": "charlie",
+            "email": "charlie@example.com",
+            "role": {"id": 2, "name": "user", "description": "Regular user"}
+        }
+    """
     repo = UserRepository(session)
     return repo.add(user)
 
 
 @router.put("/users/{id}", tags=["users"])
 async def update_user(id: int, user: User, session: SessionDep):
+    """
+    Update an existing user.
+
+    - **Description:** Modifies user information.
+    - **Path Parameter:** `id` - The user's unique identifier.
+    - **Request Example:**
+        {
+            "username": "alice",
+            "email": "alice@newdomain.com",
+            "role_id": 1
+        }
+    - **Response:** The updated user object.
+    - **Response Example:**
+        {
+            "id": 1,
+            "username": "alice",
+            "email": "alice@newdomain.com",
+            "role": {"id": 1, "name": "admin", "description": "Administrator"}
+        }
+    - **404:** User not found.
+    """
     try:
         repo = UserRepository(session)
         return repo.update(id, user)
