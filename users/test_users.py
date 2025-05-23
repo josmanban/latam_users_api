@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from test import session_fixture, client_fixture  # noqa: F401
 
 
 def test_list_roles_success(client: TestClient):
