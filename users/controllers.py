@@ -17,7 +17,8 @@ async def list_roles(session: SessionDep):
     - **Response Example:**
         [
             {"id": 1, "name": "admin", "description": "Administrator"},
-            {"id": 2, "name": "user", "description": "Regular user"}
+            {"id": 2, "name": "user", "description": "Regular user"},
+            {"id": 3, "name": "guest", "description": "Guest user"}
         ]
     """
     repo = UserRoleRepository(session)
@@ -32,8 +33,26 @@ async def list_users(session: SessionDep):
     - **Description:** Returns a list of all users with basic information.
     - **Response Example:**
         [
-            {"id": 1, "username": "alice", "email": "alice@example.com"},
-            {"id": 2, "username": "bob", "email": "bob@example.com"}
+            {
+                "id": 1,
+                "username": "alice",
+                "email": "alice@example.com",
+                "first_name": "Alice",
+                "last_name": "Smith",
+                "active": true,
+                "created_at": "2023-10-01T12:00:00",
+                "updated_at": "2023-10-01T12:00:00"
+            },
+            {
+                "id": 2,
+                "username": "bob",
+                "email": "bob@example.com",
+                "first_name": "Bob",
+                "last_name": "Johnson",
+                "active": true,
+                "created_at": "2023-10-01T12:00:00",
+                "updated_at": "2023-10-01T12:00:00"
+            }
         ]
     """
     repo = UserRepository(session)
@@ -52,6 +71,11 @@ async def retrieve_user(id: int, session: SessionDep):
             "id": 1,
             "username": "alice",
             "email": "alice@example.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "active": true,
+            "created_at": "2023-10-01T12:00:00",
+            "updated_at": "2023-10-01T12:00:00",
             "role": {"id": 1, "name": "admin", "description": "Administrator"}
         }
     - **404:** User not found.
@@ -90,6 +114,11 @@ async def add_user(user: User, session: SessionDep):
         {
             "username": "charlie",
             "email": "charlie@example.com",
+            "first_name": "Charlie",
+            "last_name": "Brown",
+            "active": true,
+            "created_at": "2023-10-01T12:00:00",
+            "updated_at": "2023-10-01T12:00:00",
             "role_id": 2
         }
     - **Response:** The created user object.
@@ -98,6 +127,11 @@ async def add_user(user: User, session: SessionDep):
             "id": 3,
             "username": "charlie",
             "email": "charlie@example.com",
+            "first_name": "Charlie",
+            "last_name": "Brown",
+            "active": true,
+            "created_at": "2023-10-01T12:00:00",
+            "updated_at": "2023-10-01T12:00:00",
             "role": {"id": 2, "name": "user", "description": "Regular user"}
         }
     """
@@ -119,6 +153,11 @@ async def update_user(id: int, user: User, session: SessionDep):
         {
             "username": "alice",
             "email": "alice@newdomain.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "active": true,
+            "created_at": "2023-10-01T12:00:00",
+            "updated_at": "2023-10-01T12:00:00",
             "role_id": 1
         }
     - **Response:** The updated user object.
@@ -127,6 +166,11 @@ async def update_user(id: int, user: User, session: SessionDep):
             "id": 1,
             "username": "alice",
             "email": "alice@newdomain.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "active": true,
+            "created_at": "2023-10-01T12:00:00",
+            "updated_at": "2023-10-01T12:00:00",
             "role": {"id": 1, "name": "admin", "description": "Administrator"}
         }
     - **404:** User not found.

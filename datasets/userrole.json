@@ -1,16 +1,16 @@
 [
     {
-        "description": "admin",
+        "description": "Administrator",
         "id": 1,
         "name": "admin"
     },
     {
-        "description": "user",
+        "description": "Regular user",
         "id": 2,
         "name": "user"
     },
     {
-        "description": "guest",
+        "description": "Guest User",
         "id": 3,
         "name": "guest"
     }
