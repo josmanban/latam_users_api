@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.orm.exc import UnmappedInstanceError
-
+from pydantic import ValidationError
 from base.db_connection import SessionDep
 from users.models import User, UserList, UserRole
 from users.repositories import UserRepository, UserRoleRepository
@@ -101,8 +101,11 @@ async def add_user(user: User, session: SessionDep):
             "role": {"id": 2, "name": "user", "description": "Regular user"}
         }
     """
-    repo = UserRepository(session)
-    return repo.add(user)
+    try:
+        repo = UserRepository(session)
+        return repo.add(user)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=str(e.errors()))
 
 
 @router.put("/users/{id}", tags=["users"])

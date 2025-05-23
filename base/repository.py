@@ -62,6 +62,9 @@ class Repository(Generic[T]):
         Example:
             new_user = user_repository.add(User(...))
         """
+        # Validate the instance using Pydantic
+        self.model_class.model_validate(new_instance)  # type: ignore[attr-defined]
+
         self.session.add(new_instance)
         self.session.commit()
         self.session.refresh(new_instance)
@@ -89,6 +92,10 @@ class Repository(Generic[T]):
             raise UnmappedInstanceError(db_instance)
         instance_data = instance.model_dump(exclude_unset=True)  # type: ignore[attr-defined]
         db_instance.sqlmodel_update(instance_data)  # type: ignore[attr-defined]
+
+        # Validate the instance using Pydantic
+        self.model_class.model_validate(db_instance)  # type: ignore[attr-defined]
+
         self.session.add(db_instance)
         self.session.commit()
         self.session.refresh(db_instance)
